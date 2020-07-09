@@ -37,3 +37,4 @@ jobs:
         registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         name: aci-devopsdays
         location: 'westeurope'
+        environment-variables: BASE_URL=https://devopsdaysams.azurewebsites.net/api/AddToWall
