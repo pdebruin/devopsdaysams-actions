@@ -1,0 +1,39 @@
+name: Docker build push deploy
+
+on: [push]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+#    - uses: actions/checkout@v2
+#    - name: Build the Docker image
+#      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - uses: azure/docker-login@v1 #azure/container-actions/docker-login@master
+      with:
+        login-server: pieterd.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - run: |
+        docker build . -t pieterd.azurecr.io/pdebruin/devopsdays:${{ github.sha }}
+        docker push pieterd.azurecr.io/pdebruin/devopsdays:${{ github.sha }}
+
+#jobs:
+#  build:
+#    runs-on: ubuntu-16.04 #ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@master
+    
+#    - uses: azure/docker-login@v1 #azure/container-actions/docker-login@master
+#      with:
+#        login-server: pieterd.azurecr.io
+#        username: ${{ secrets.REGISTRY_USERNAME }}
+#        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+#    - run: |
+#        docker build . -t pieterd.azurecr.io/pdebruin/aspcorealpine:${{ github.sha }}
+#        docker push pieterd.azurecr.io/pdebruin/aspcorealpine:${{ github.sha }}
