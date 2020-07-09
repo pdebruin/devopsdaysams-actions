@@ -20,6 +20,7 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
     - run: |
+        ls -al
         docker build . -t pieterd.azurecr.io/pdebruin/devopsdays:${{ github.sha }}
         docker push pieterd.azurecr.io/pdebruin/devopsdays:${{ github.sha }}
 
