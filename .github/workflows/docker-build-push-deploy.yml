@@ -32,7 +32,7 @@ jobs:
         resource-group: devopsrg
         dns-name-label: devopsrg${{ github.run_number }}
         image: pieterd.azurecr.io/pdebruin/devopsdays:${{ github.sha }}
-        registry-login-server: ${{ pieterd.azurecr.io }}
+        registry-login-server: pieterd.azurecr.io
         registry-username: ${{ secrets.REGISTRY_USERNAME }}
         registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         name: aci-devopsdays
