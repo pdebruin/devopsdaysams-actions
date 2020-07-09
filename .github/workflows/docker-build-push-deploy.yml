@@ -10,9 +10,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-#    - name: Build the Docker image
-#      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-# added secrets
+      
     - uses: azure/docker-login@v1 #azure/container-actions/docker-login@master
       with:
         login-server: pieterd.azurecr.io
@@ -20,23 +18,22 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
     - run: |
-        pwd
-        ls -al
         docker build . -t pieterd.azurecr.io/pdebruin/devopsdays:${{ github.sha }}
         docker push pieterd.azurecr.io/pdebruin/devopsdays:${{ github.sha }}
 
-#jobs:
-#  build:
-#    runs-on: ubuntu-16.04 #ubuntu-latest
-#    steps:
-#    - uses: actions/checkout@master
-    
-#    - uses: azure/docker-login@v1 #azure/container-actions/docker-login@master
-#      with:
-#        login-server: pieterd.azurecr.io
-#        username: ${{ secrets.REGISTRY_USERNAME }}
-#        password: ${{ secrets.REGISTRY_PASSWORD }}
-    
-#    - run: |
-#        docker build . -t pieterd.azurecr.io/pdebruin/aspcorealpine:${{ github.sha }}
-#        docker push pieterd.azurecr.io/pdebruin/aspcorealpine:${{ github.sha }}
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Deploy to Azure Container Instances'
+      uses: 'azure/aci-deploy@v1'
+      with:
+        resource-group: devopsrg
+        dns-name-label: devopsrg${{ github.run_number }}
+        image: pieterd.azurecr.io/pdebruin/devopsdays:${{ github.sha }}
+        registry-login-server: ${{ pieterd.azurecr.io }}
+        registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        name: aci-devopsdays
+        location: 'westeurope'
